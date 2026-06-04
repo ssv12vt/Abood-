@@ -1,129 +1,367 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة البث المباشر الاحترافية</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>بث مباشر حصري | العراق ضد إسبانيا</title>
     
-    <!-- مكتبة المشغل الشهيرة Video.js وملفات التصميم الخاصة بها -->
-    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
-    <!-- ثيم عالي الجودة للمشغل (City Theme) ليعطي مظهر خارق -->
-    <link href="https://unpkg.com/@videojs/themes@1.0.1/dist/city/index.css" rel="stylesheet">
-
+    <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
     <style>
-        /* تصميم الخلفية والواجهة */
-        body {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
+        :root { 
+            --neon: #00d2ff; 
+            --gold: #ffd700; 
+            --glass-bg: rgba(20, 32, 48, 0.6);
+            --card-border: rgba(0, 210, 255, 0.25);
+            --text-muted: #a0aec0;
+        }
+
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            background-color: #030a16;
+            background-image: 
+                radial-gradient(circle at 50% 15%, rgba(0, 210, 255, 0.12), transparent 45%),
+                radial-gradient(circle at 85% 75%, rgba(0, 210, 255, 0.04), transparent 35%),
+                radial-gradient(circle at 15% 35%, rgba(0, 210, 255, 0.04), transparent 35%);
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            overflow-x: hidden;
+        }
+
+        .container { width: 96%; max-width: 1000px; margin: 25px auto; padding-bottom: 40px; }
+
+        /* الهيدر العلوي - تطابق 100% مع الصورة */
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+        .team-box { display: flex; flex-direction: column; align-items: center; width: 30%; }
+        .team-flag-wrapper {
+            position: relative;
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--neon), transparent);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+        }
+        .team-flag-wrapper img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .team-title { font-size: 22px; font-weight: bold; margin-top: 12px; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.6); }
+        .fifa-tag { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+        .center-info { width: 40%; text-align: center; }
+        .main-live-title { font-size: 26px; font-weight: bold; color: #ffffff; margin: 0 0 5px 0; letter-spacing: 0.5px; }
+        .time-badge { font-size: 16px; font-weight: bold; color: #ffffff; direction: ltr; display: inline-block; }
+        .date-text { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+
+        /* مشغل الفيديو والإطار النيوني الدقيق */
+        .video-container { 
+            position: relative; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            background: #000; 
+            border: 2px solid var(--neon); 
+            box-shadow: 0 0 25px rgba(0, 210, 255, 0.4); 
+            margin-bottom: 25px; 
+        }
+        .video-js { width: 100% !important; height: auto !important; aspect-ratio: 16/9 !important; }
+
+        #play-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); z-index:100; display:flex; justify-content:center; align-items:center; cursor:pointer; }
+        .play-btn { width:75px; height:75px; background:rgba(0, 210, 255, 0.15); border: 2px solid var(--neon); border-radius:50%; display:flex; justify-content:center; align-items:center; box-shadow: 0 0 20px var(--neon); backdrop-filter: blur(4px); }
+        .play-icon { width:0; height:0; border-top:16px solid transparent; border-bottom:16px solid transparent; border-left:26px solid #fff; margin-left:8px; }
+
+        /* زر التليجرام النيون المتوهج كالصورة */
+        .tg-channel-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(4, 20, 36, 0.85);
+            border: 2px solid var(--neon);
+            border-radius: 18px;
+            padding: 14px 24px;
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.35);
+            margin-bottom: 30px;
+            transition: 0.3s ease;
+        }
+        .tg-channel-btn:hover { box-shadow: 0 0 30px rgba(0, 210, 255, 0.6); transform: scale(1.005); }
+        .tg-text-side { display: flex; flex-direction: column; text-align: right; }
+        .tg-main-txt { font-size: 18px; font-weight: bold; color: #fff; }
+        .tg-sub-txt { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+        .tg-icon-circle { width: 44px; height: 44px; background: #229ED9; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 12px #229ED9; }
+        .tg-icon-circle svg { width: 24px; height: 24px; fill: white; }
+
+        /* توزيع الكروت أفقياً بشكل دائم وصارم: اليمين مشاهدات واليسار بيانات واحد صف الثاني */
+        .flex-row-cards { 
+            display: flex; 
+            gap: 20px; 
+            width: 100%; 
+            flex-direction: row !important; /* يضمن بقاء العمودين بجانب بعضهما حتى على الموبايل */
+        }
+
+        .info-card {
+            flex: 1;
+            width: 50%; /* تقسيم المساحة بالتساوي 50% لكل عمود */
+            background: var(--glass-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
         }
 
-        .container {
-            width: 90%;
-            max-width: 900px;
+        .card-header-title { font-size: 20px; font-weight: bold; color: #fff; text-align: center; margin-bottom: 15px; }
+
+        /* تفاصيل بيانات اللقاء (اليسار) */
+        .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 15px; }
+        .info-row:last-of-type { border-bottom: none; }
+        .info-label { color: var(--text-muted); text-align: right; }
+        .info-value { color: #ffffff; font-weight: 500; text-align: left; }
+        .info-value.highlight { color: var(--gold); font-weight: bold; }
+
+        /* نتائج المباريات الأخيرة أسفل كرت البيانات */
+        .last-matches-section { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; text-align: center; }
+        .last-matches-title { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; font-family: sans-serif; }
+        .circles-row { display: flex; justify-content: center; gap: 4px; direction: ltr; flex-wrap: wrap; }
+        .status-circle { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #fff; }
+        .status-circle.win { background: #2ecc71; }
+        .status-circle.draw { background: #7f8c8d; }
+        .status-circle.loss { background: #e74c3c; }
+
+        /* كرت المشاهدات (اليمين) */
+        .views-headline { text-align: center; margin-bottom: 15px; }
+        .total-counter-view { font-size: 24px; font-weight: bold; color: var(--gold); margin-top: 4px; }
+        
+        .cities-list-box { display: flex; flex-direction: column; gap: 8px; }
+        
+        /* كتل صفوف المشاهدات: مستطيل كامل رمادي والترتيب مطابق للصورة */
+        .city-bar-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 11px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            font-size: 15px;
+        }
+        .city-bar-name { color: var(--text-muted); order: 2; text-align: left; }
+        .city-bar-count { color: #ffffff; font-family: monospace; font-weight: 500; order: 1; text-align: right; }
+
+        /* سهم الإغلاق/التمرير السفلي للكرت */
+        .scroll-indicator { text-align: center; margin-top: auto; padding-top: 10px; color: rgba(255,255,255,0.3); font-size: 14px; }
+
+        /* التنويه السفلي المعتم وحفظ الحقوق */
+        .bottom-disclaimer {
+            margin-top: 35px;
+            padding: 20px 10px;
+            font-size: 13px;
+            color: var(--text-muted);
             text-align: center;
-            padding: 20px;
+            line-height: 1.8;
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-            background: linear-gradient(to right, #00c6ff, #0072ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .status {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background-color: rgba(255, 0, 0, 0.2);
-            border: 1px solid #ff0000;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-bottom: 25px;
-            animation: pulse 2s infinite;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            background-color: #ff0000;
-            border-radius: 50%;
-        }
-
-        /* حاوية المشغل لإعطائه هيبة وتأثير مضيء */
-        .video-wrapper {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 15px;
-            border-radius: 16px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        /* تعديلات مخصصة للمشغل ليكون متجاوب 100% مع الشاشات والهواتف */
-        .video-js {
-            width: 100% !important;
-            height: auto;
-            aspect-ratio: 16 / 9;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
-        }
-
-        footer {
-            margin-top: 30px;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.6);
+        /* تعديلات خفيفة لتناسب الشاشات الصغيرة دون الإخلال بوضعية العمودين بجانب بعضهما */
+        @media (max-width: 768px) {
+            .container { width: 98%; margin: 10px auto; }
+            .match-header { margin-bottom: 15px; }
+            .team-title { font-size: 16px; margin-top: 6px; }
+            .fifa-tag { font-size: 11px; }
+            .main-live-title { font-size: 18px; }
+            .time-badge { font-size: 13px; }
+            .date-text { font-size: 11px; }
+            .team-flag-wrapper { width: 55px; height: 55px; }
+            
+            .info-card { padding: 10px; }
+            .card-header-title { font-size: 15px; margin-bottom: 10px; }
+            .info-row { font-size: 11px; padding: 8px 0; }
+            .city-bar-row { font-size: 11px; padding: 8px 10px; border-radius: 8px; }
+            .total-counter-view { font-size: 16px; }
+            .tg-main-txt { font-size: 14px; }
+            .tg-sub-txt { font-size: 11px; }
+            .tg-channel-btn { padding: 10px 14px; border-radius: 12px; margin-bottom: 15px; }
+            .tg-icon-circle { width: 34px; height: 34px; }
+            .tg-icon-circle svg { width: 18px; height: 18px; }
+            .status-circle { width: 14px; height: 14px; font-size: 8px; }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>قناة البث المباشر</h1>
-        
-        <div class="status">
-            <span class="dot"></span>
-            <span>مباشر الآن</span>
-        </div>
 
-        <!-- مشغل الفيديو الاحترافي -->
-        <div class="video-wrapper">
-            <video
-                id="my-live-video"
-                class="video-js vjs-theme-city vjs-big-play-centered"
-                controls
-                preload="auto"
-                data-setup='{}'>
-                <!-- رابط البث المباشر الخاص بك -->
-                <source src="http://37.48.82.95/live/HUSSEIN5050/Hussein6060/214574.m3u8?token=Y2YzWXpGMGdDaWVmN0VCE" type="application/x-mpegURL">
-                <p class="vjs-no-js">
-                    المتصفح الخاص بك لا يدعم تشغيل هذا الفيديو، يرجى تحديث المتصفح.
-                </p>
+        <!-- الهيدر العلوي الاحترافي للمباراة -->
+        <header class="match-header">
+            <!-- منتخب العراق يمين الهيدر -->
+            <div class="team-box">
+                <div class="team-flag-wrapper">
+                    <img src="https://flagcdn.com/w160/iq.png" alt="العراق">
+                </div>
+                <span class="team-title">العراق</span>
+                <span class="fifa-tag">(FIFA 57)</span>
+            </div>
+
+            <!-- تفاصيل وتوقيت المنتصف -->
+            <div class="center-info">
+                <h1 class="main-live-title">بث مباشر حصري</h1>
+                <div class="time-badge">10:00 م (GMT +3)</div>
+                <div class="date-text">الخميس (04-06-2026)</div>
+            </div>
+
+            <!-- منتخب إسبانيا يسار الهيدر -->
+            <div class="team-box">
+                <div class="team-flag-wrapper">
+                    <img src="https://flagcdn.com/w160/es.png" alt="إسبانيا">
+                </div>
+                <span class="team-title">إسبانيا</span>
+                <span class="fifa-tag">(FIFA 2)</span>
+            </div>
+        </header>
+
+        <!-- مشغل فيديو البث المباشر المتوهج -->
+        <div class="video-container">
+            <div id="play-overlay" onclick="startStream()">
+                <div class="play-btn"><div class="play-icon"></div></div>
+            </div>
+            <video id="v-player" class="video-js" playsinline>
+                <source src="https://ar26.twinsbeworld.info/live/2206_.m3u8?session=wOC02bgPPxQlMQvO6K28Qhes8kyfguIleULvyppXkEXhmPwtPTycF6GAgUiySBBzSZbXIrnRkWxx7rbnM7q3ATbNF3flEM_V&location=local">
             </video>
         </div>
 
-        <footer>جميع الحقوق محفوظة © 2026</footer>
+        <!-- زر التليجرام المضيء والمطابق لأبعاد الصورة وتحت المشغل مباشرة -->
+        <a href="https://t.me/live4kz" target="_blank" class="tg-channel-btn">
+            <div class="tg-text-side">
+                <span class="tg-main-txt">انضم الآن لقناتنا على تليجرام</span>
+                <span class="tg-sub-txt">للحصول على روابط إضافية وأخبار حصرية</span>
+            </div>
+            <div class="tg-icon-circle">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-1-.65-.35-1 .22-1.62.15-.15 2.7-2.48 2.75-2.7.01-.03.01-.14-.05-.2-.06-.06-.15-.04-.21-.03-.09.02-1.49.94-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.13-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/>
+                </svg>
+            </div>
+        </a>
+
+        <!-- صف العمودين: اليمين مشاهدات واليسار بيانات واحد بصف الثاني بشكل ثابت ودائم -->
+        <div class="flex-row-cards">
+            
+            <!-- العمود الأيمن: مشاهدات العراق (مطابق للصورة) -->
+            <div class="info-card">
+                <div class="views-headline">
+                    <div class="card-header-title" style="margin-bottom: 5px;">
+                        مشاهدات العراق 🇮🇶
+                    </div>
+                    <div class="total-counter-view" id="live-total-txt">245.810 ألف</div>
+                </div>
+
+                <div class="cities-list-box" id="cities-render-box">
+                    <!-- يتم بناؤها حية بالأسماء والترتيب المعكوس المطابق للصورة -->
+                </div>
+                <div class="scroll-indicator">▲</div>
+            </div>
+
+            <!-- العمود الأيسر: بيانات اللقاء (مطابق للصورة) -->
+            <div class="info-card">
+                <div class="card-header-title">بيانات اللقاء</div>
+                
+                <div class="info-row">
+                    <span class="info-label">البطولة:</span>
+                    <span class="info-value">مباراة ودية</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">ملعب المباراة:</span>
+                    <span class="info-value">ملعب ريازور</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">القناة الناقلة:</span>
+                    <span class="info-value highlight">بث مباشر حصري</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">المعلق:</span>
+                    <span class="info-value">أحمد البلوشي</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">حكم المباراة:</span>
+                    <span class="info-value">فلوريان بادتشتوبنر</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">وقت المباراة:</span>
+                    <span class="info-value">10:00 م ( MT + GMT )</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">تاريخ المباراة:</span>
+                    <span class="info-value">الخميس ( 04-06-2026 )</span>
+                </div>
+
+                <!-- شريط الدوائر الملونة لنتائج آخر 5 مباريات -->
+                <div class="last-matches-section">
+                    <div class="last-matches-title">Last 5 matches</div>
+                    <div class="circles-row">
+                        <div class="status-circle win">ف</div>
+                        <div class="status-circle win">ف</div>
+                        <div class="status-circle draw">ت</div>
+                        <div class="status-circle win">ف</div>
+                        <div class="status-circle win">ف</div>
+                        <div class="status-circle win">ف</div>
+                        <div class="status-circle loss">خ</div>
+                        <div class="status-circle loss">خ</div>
+                        <div class="status-circle draw">ت</div>
+                        <div class="status-circle win">ف</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- التنويه السفلي وحفظ حقوق البث الخاص بموقعك -->
+        <footer class="bottom-disclaimer">
+            نود التنويه أن هذا البث مخصص للمشاهدة الشخصية فقط، ويُمنع منعاً باتاً إعادة نشره أو بثه أو استخدامه بأي شكل من الأشكال بدون إذن مسبق من إدارة الموقع. أي محاولة لنسخ المحتوى أو إعادة توزيعه تعرض صاحبها للمساءلة القانونية.
+        </footer>
+
     </div>
 
-    <!-- جافا سكريبت الخاصة بالمشغل لتثبيت البث ومنع التقطيع -->
-    <script src="https://vjs.zencdn.net/8.10.0/video.js"></script>
+    <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
+    <script>
+        const player = videojs('v-player', { fluid: true, controls: true });
+        function startStream() { 
+            player.muted(false); 
+            player.play(); 
+            document.getElementById('play-overlay').style.display = 'none'; 
+        }
+
+        // الأسماء الظاهرة في لقطة الشاشة بالترتيب
+        const targetLabels = ["المدن", "الجروبية", "العراق", "سراعة", "المقارة", "العاوية", "الخمن"];
+
+        function updateLiveMetrics() {
+            let baseCount = 245.810; 
+            let randomFluctuation = baseCount + (Math.random() * 1.8 - 0.9);
+            document.getElementById('live-total-txt').innerText = randomFluctuation.toFixed(3) + " ألف";
+            
+            let htmlContent = "";
+            targetLabels.forEach((label, idx) => {
+                let factor = 1 - (idx * 0.12) - (Math.random() * 0.02);
+                if(factor < 0.02) factor = 0.02;
+                let finalVal = randomFluctuation * factor;
+                
+                htmlContent += `
+                    <div class="city-bar-row">
+                        <span class="city-bar-name">${label}</span>
+                        <span class="city-bar-count">${finalVal.toFixed(3)} ألف</span>
+                    </div>
+                `;
+            });
+            document.getElementById('cities-render-box').innerHTML = htmlContent;
+        }
+
+        setInterval(updateLiveMetrics, 5000);
+        updateLiveMetrics();
+    </script>
 </body>
 </html>
