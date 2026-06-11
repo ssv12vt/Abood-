@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  
     <title>البث المباشر لبطولة كأس العالم | قنوات beIN MAX</title>  
     
-    <!-- استدعاء مكتبة المشغل فلويد السريع والخفيف -->
     <link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css" type="text/css"/>
     <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
 
@@ -276,7 +275,6 @@
 </head>  
 <body>  <div class="container">  
 
-    <!-- الهيدر الخاص بكأس العالم -->  
     <header class="match-header">  
         <svg class="header-trophy" viewBox="0 0 24 24">  
             <path d="M18 2H6v2c0 2.21 1.79 4 4 4h4c2.21 0 4-1.79 4-4V2zm-1 4h-2V4h2v2zM7 6V4h2v2H7zm11 3c0 2.76-2.24 5-5 5v2h2c1.1 0 2 .9 2 2v1H7v-1c0-1.1.9-2 2-2h2v-2c-2.76 0-5-2.24-5-5H4v2c0 2.43 1.73 4.46 4 4.93V19H5v2h14v-2h-3v-4.07c2.27-.47 4-2.5 4-4.93V9h-2z"/>  
@@ -288,14 +286,12 @@
         <p class="sub-live-title">تغطية مستمرة لكافة قنوات البطولة | بواسطة المطور <span class="by-author">عبود</span></p>  
     </header>  
 
-    <!-- مشغل الفيديو Fluid Player الذكي والسريع -->  
     <div class="video-container">  
         <video id="main-stream-video">
-            <source src="https://so132.acmst.it.com/live/419500_.m3u8?session=AJXLFeCbHWBVbG63inGuziZn74RCYF17t4cwpiO7GTOg5TeKp5zp5NaR7HA6gnrk_WoDv1qMts9T9s0GEwAROC4dXKBMM81-&location=local" type="application/x-mpegURL" />
+            <source src="https://prod-fastly-eu-west-1.video.pscp.tv/Transcoding/v1/hls/puKBBtYm1DV0YjUSkweNQs7M-DtnfRr6oGlqKhuiDJbeOO4YWELWAYCqnSPsTBFTCP5I1yRu9-Q_5Pcr54IpwQ/non_transcode/eu-west-1/periscope-replay-direct-prod-eu-west-1-public/master_dynamic_delta.m3u8?type=live" type="application/x-mpegURL" />
         </video>  
     </div>  
 
-    <!-- أزرار اختيار قنوات beIN MAX -->  
     <div class="channels-section">  
         <div class="channels-title">اختر قناة البث المباشر:</div>  
         <div class="channels-grid">  
@@ -306,7 +302,6 @@
         </div>  
     </div>  
 
-    <!-- زر التليجرام -->  
     <a href="https://t.me/live4kz" target="_blank" class="tg-channel-btn">  
         <div class="tg-text-side">  
             <span class="tg-main-txt">انضم الآن لقناتنا على تليجرام</span>  
@@ -319,7 +314,6 @@
         </div>  
     </a>  
 
-    <!-- صف العمودين السفلية -->  
     <div class="flex-row-cards">  
         <div class="info-card">  
             <div class="views-headline">  
@@ -363,21 +357,23 @@
             allowTheatre: false,
             playbackRateEnabled: false,
             logo: {
-                imageUrl: '', // أتركه فارغاً لكي لا يظهر أي شعار خارجي فوق البث
+                imageUrl: '', 
                 position: 'top right'
             }
         }
     });
 
     function switchChannel(channelKey, buttonElement) {  
-        // استخدام الطريقة البرمجية الصحيحة لتغيير السورس في Fluid Player
+        // الحل البرمجي الصحيح لتغيير السورس بشكل ديناميكي دون تعليق المشغل
         var videoElement = document.getElementById('main-stream-video');
+        
+        // تغيير السورس للوسم الرئيسي وتحديث المشغل
         videoElement.src = channelLinks[channelKey];
         
-        // إعادة تشغيل القناة الجديدة فوراً
+        // أمر إجباري لـ Fluid Player لإعادة تحميل الرابط الجديد وتشغيله فوراً
         myFluidPlayer.play();
         
-        // تعديل ألوان الأزرار النشطة
+        // تعديل ألوان الأزرار النشطة (الحفاظ على التصميم الأصلي)
         document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));  
         buttonElement.classList.add('active');  
     }  
