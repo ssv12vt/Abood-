@@ -4,6 +4,11 @@
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  
     <title>البث المباشر لبطولة كأس العالم | قنوات beIN MAX</title>  
+    
+    <!-- استدعاء مكتبة المشغل فلويد السريع والخفيف -->
+    <link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css" type="text/css"/>
+    <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
+
 <style>  
     :root {   
         --neon: #00d2ff;   
@@ -114,8 +119,11 @@
         border: 2px solid var(--neon);   
         box-shadow: 0 0 25px rgba(0, 210, 255, 0.4);   
         margin-bottom: 25px;   
+        aspect-ratio: 16/9;
     }  
-    .native-player { width: 100% !important; height: auto !important; aspect-ratio: 16/9 !important; display: block; }  
+    
+    /* ضبط أبعاد المشغل الجديد ليتناسب تماماً مع التصميم النيوني */
+    .fluid_video_wrapper { width: 100% !important; height: 100% !important; }
 
     /* قسم أزرار قنوات beIN MAX المتطور */  
     .channels-section {  
@@ -203,14 +211,14 @@
 
     .card-header-title { font-size: 20px; font-weight: bold; color: #fff; text-align: center; margin-bottom: 15px; }  
 
-    /* تفاصيل البطولة (اليسار) */  
+    /* تفاصيل البطولة */  
     .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 15px; }  
     .info-row:last-of-type { border-bottom: none; }  
     .info-label { color: var(--text-muted); text-align: right; }  
     .info-value { color: #ffffff; font-weight: 500; text-align: left; }  
     .info-value.highlight { color: var(--gold); font-weight: bold; }  
 
-    /* كرت المشاهدات (اليمين) */  
+    /* كرت المشاهدات */  
     .views-headline { text-align: center; margin-bottom: 15px; }  
     .total-counter-view { font-size: 24px; font-weight: bold; color: var(--gold); margin-top: 4px; }  
       
@@ -268,6 +276,7 @@
 </head>  
 <body>  <div class="container">  
 
+    <!-- الهيدر الخاص بكأس العالم -->  
     <header class="match-header">  
         <svg class="header-trophy" viewBox="0 0 24 24">  
             <path d="M18 2H6v2c0 2.21 1.79 4 4 4h4c2.21 0 4-1.79 4-4V2zm-1 4h-2V4h2v2zM7 6V4h2v2H7zm11 3c0 2.76-2.24 5-5 5v2h2c1.1 0 2 .9 2 2v1H7v-1c0-1.1.9-2 2-2h2v-2c-2.76 0-5-2.24-5-5H4v2c0 2.43 1.73 4.46 4 4.93V19H5v2h14v-2h-3v-4.07c2.27-.47 4-2.5 4-4.93V9h-2z"/>  
@@ -279,10 +288,14 @@
         <p class="sub-live-title">تغطية مستمرة لكافة قنوات البطولة | بواسطة المطور <span class="by-author">عبود</span></p>  
     </header>  
 
+    <!-- مشغل الفيديو Fluid Player الذكي والسريع -->  
     <div class="video-container">  
-        <video id="my-video" class="native-player" controls autoplay playsinline preload="auto"></video>  
+        <video id="main-stream-video">
+            <source src="https://so132.acmst.it.com/live/419500_.m3u8?session=AJXLFeCbHWBVbG63inGuziZn74RCYF17t4cwpiO7GTOg5TeKp5zp5NaR7HA6gnrk_WoDv1qMts9T9s0GEwAROC4dXKBMM81-&location=local" type="application/x-mpegURL" />
+        </video>  
     </div>  
 
+    <!-- أزرار اختيار قنوات beIN MAX -->  
     <div class="channels-section">  
         <div class="channels-title">اختر قناة البث المباشر:</div>  
         <div class="channels-grid">  
@@ -293,6 +306,7 @@
         </div>  
     </div>  
 
+    <!-- زر التليجرام -->  
     <a href="https://t.me/live4kz" target="_blank" class="tg-channel-btn">  
         <div class="tg-text-side">  
             <span class="tg-main-txt">انضم الآن لقناتنا على تليجرام</span>  
@@ -305,6 +319,7 @@
         </div>  
     </a>  
 
+    <!-- صف العمودين السفلية -->  
     <div class="flex-row-cards">  
         <div class="info-card">  
             <div class="views-headline">  
@@ -331,55 +346,43 @@
     </footer>  
 </div>  
 
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>  
-
 <script>  
-    // ملاحظة: وضعت لك روابط بث حقيقية وشغالة الآن للتجربة، استبدلها بروابط سيرفرك عندما تريد.
     const channelLinks = {  
-        max1: "https://so132.acmst.it.com/live/419500_.m3u8?session=AJXLFeCbHWBVbG63inGuziZn74RCYF17t4cwpiO7GTOg5TeKp5zp5NaR7HA6gnrk_WoDv1qMts9T9s0GEwAROC4dXKBMM81-&location=local", // رابط بث تجريبي مستقر جداً وشغال فوراً لقناة 1
-        max2: "https://samples.tdat.ch/dash/vod/car-unesco/car-unesco.m3u8", // رابط حقيقي لشاشة 2
-        max3: "https://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8", // رابط حقيقي لشاشة 3
-        max4: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" // رابط حقيقي لشاشة 4
+        max1: "https://so132.acmst.it.com/live/419500_.m3u8?session=AJXLFeCbHWBVbG63inGuziZn74RCYF17t4cwpiO7GTOg5TeKp5zp5NaR7HA6gnrk_WoDv1qMts9T9s0GEwAROC4dXKBMM81-&location=local",   
+        max2: "https://example.com/live/max2.m3u8",   
+        max3: "https://example.com/live/max3.m3u8",   
+        max4: "https://example.com/live/max4.m3u8"    
     };  
 
-    const video = document.getElementById('my-video');  
-    let hls = new Hls();
-
-    function loadStream(url) {
-        if (Hls.isSupported()) {
-            hls.destroy(); // تنظيف البث السابق لزيادة السرعة
-            hls = new Hls();
-            hls.loadSource(url);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                video.play().catch(() => {
-                    // إذا منع المتصفح التشغيل التلقائي بسبب الصوت، يشتغل مكتوم الصوت تلقائياً لضمان عدم توقف الصفحة
-                    video.muted = true;
-                    video.play();
-                });
-            });
-        } 
-        // دعم متصفحات آبل (سافاري و آيفون) التي تشغل m3u8 بدون مكتبات خارجية
-        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = url;
-            video.addEventListener('loadedmetadata', function() {
-                video.play();
-            });
+    // تهيئة ميزات المشغل ليعمل بأعلى كفاءة وسرعة على الهواتف والأجهزة الذكية
+    var myFluidPlayer = fluidPlayer('main-stream-video', {
+        layoutControls: {
+            fillToContainer: true, 
+            autoPlay: true, 
+            mute: false, 
+            allowTheatre: false,
+            playbackRateEnabled: false,
+            logo: {
+                imageUrl: '', // أتركه فارغاً لكي لا يظهر أي شعار خارجي فوق البث
+                position: 'top right'
+            }
         }
-    }
-
-    // تشغيل القناة الأولى عند فتح الصفحة مباشرة
-    loadStream(channelLinks.max1);  
+    });
 
     function switchChannel(channelKey, buttonElement) {  
-        loadStream(channelLinks[channelKey]);  
+        // استخدام الطريقة البرمجية الصحيحة لتغيير السورس في Fluid Player
+        var videoElement = document.getElementById('main-stream-video');
+        videoElement.src = channelLinks[channelKey];
         
-        // تغيير نمط الأزرار
+        // إعادة تشغيل القناة الجديدة فوراً
+        myFluidPlayer.play();
+        
+        // تعديل ألوان الأزرار النشطة
         document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));  
         buttonElement.classList.add('active');  
     }  
 
-    // كود العدادات العشوائية التلقائية للدول العربية (نفس كودك السابق تماماً)
+    // كود العدادات والإحصائيات التلقائية
     const targetLabels = ["العراق", "السعودية", "مصر", "المغرب", "الجزائر", "الأردن", "الإمارات"];  
     function updateLiveMetrics() {  
         let baseCount = 580.420;   
